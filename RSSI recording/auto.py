@@ -115,7 +115,10 @@ def run_matt(offset_x=0, offset_y=0, delta_x=5, delta_y=5,x_min=10,y_min=10, x_m
 			#run gnuradio
 			#ex filename: vlp_RSS_analog_capture_hn_t0_fn_xX_yY.bin
 			[x_coord,y_coord] = estimate_position(offset_x, offset_y, x_axis,y_axis)
-			filename = "vlp_RSS_analog_capture_hn_t0_fn_x"+str(x_coord)+"_y"+str(y_coord)+".bin"
+			if vector==1:
+				filename = "vlp_RSS_vector_capture_hn_t0_fn_x"+str(x_coord)+"_y"+str(y_coord)+".bin"
+			else:
+				filename = "vlp_RSS_analog_capture_hn_t0_fn_x"+str(x_coord)+"_y"+str(y_coord)+".bin"
 			print x_axis, x_coord, y_coord, y_axis, filename
 			ser.write("?\r")
 			print ser.readline()
@@ -144,9 +147,10 @@ def run_gnuradio(time_length=3, filename='ex.bin', vector=0):
 	#runs gnuradio on a timer
 	#Time is in seconds. 
 	timeout = 1
-	file_directory="/bin/"
-	if "bin" not in os.listdir( os.getcwd() ):
-		os.mkdir("/bin")
+	if vector == 0:
+		file_directory="/vectors/"
+	else:
+		file_directory="/analogs/"
 	FNULL = open(os.devnull, 'w')
 	start = time.time()
 	if vector==1:
@@ -193,6 +197,9 @@ $22=1.000 (homing pull-off, mm
 #y offset -7cm
 #x offset 17
 #run_matt(137,-6,delta_x=5, delta_y=5, x_min=70, x_max=100,y_max=70)
-
+if "vectors" not in os.listdir( os.getcwd() ):
+		os.mkdir("/vectors")
+if "analogs" not in os.listdir( os.getcwd() ):
+		os.mkdir("/analogs")
 run_matt(offset_x, offset_y, delta_x, delta_y, x_min, y_min, x_max, y_max, port, timeout, vector)
 
